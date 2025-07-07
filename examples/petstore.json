@@ -1,0 +1,332 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pet Store API",
+    "description": "A simple pet store API for testing",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.petstore.com/v1",
+      "description": "Production server"
+    }
+  ],
+  "paths": {
+    "/pets": {
+      "get": {
+        "summary": "List all pets",
+        "description": "Returns a list of all pets in the store",
+        "operationId": "listPets",
+        "tags": ["pets"],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "How many items to return at one time (max 100)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "format": "int32"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by category",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of pets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Pet"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a pet",
+        "description": "Creates a new pet in the store",
+        "operationId": "createPet",
+        "tags": ["pets"],
+        "requestBody": {
+          "description": "Pet to add to the store",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pet created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pets/{petId}": {
+      "get": {
+        "summary": "Get a pet by ID",
+        "description": "Returns a single pet",
+        "operationId": "getPetById",
+        "tags": ["pets"],
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "description": "ID of pet to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A pet",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a pet",
+        "description": "Updates an existing pet",
+        "operationId": "updatePet",
+        "tags": ["pets"],
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "description": "ID of pet to update",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Pet data to update",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewPet"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pet updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a pet",
+        "description": "Deletes a pet from the store",
+        "operationId": "deletePet",
+        "tags": ["pets"],
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "description": "ID of pet to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Pet deleted"
+          },
+          "404": {
+            "description": "Pet not found"
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Pet": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the pet"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the pet"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the pet"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["available", "pending", "sold"],
+            "description": "Pet status in the store"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags associated with the pet"
+          },
+          "photoUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "URLs of pet photos"
+          }
+        }
+      },
+      "NewPet": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the pet"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the pet"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["available", "pending", "sold"],
+            "description": "Pet status in the store",
+            "default": "available"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags associated with the pet"
+          },
+          "photoUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "URLs of pet photos"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      }
+    }
+  }
+}
