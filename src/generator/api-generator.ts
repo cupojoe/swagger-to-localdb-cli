@@ -130,7 +130,7 @@ const ${controller}Api = new ${controllerName}Api();
     
     const returnType = `Promise<ApiResponse<any>>`;
     
-    let output = `  /**
+    const output = `  /**
    * ${endpoint.summary || endpoint.description || `${endpoint.method} ${endpoint.path}`}
    * @method ${endpoint.method}
    * @path ${endpoint.path}
@@ -186,7 +186,7 @@ const ${controller}Api = new ${controllerName}Api();
   }
 
   private generateConvenienceFunctions(controller: string, endpoints: SwaggerEndpoint[]): string {
-    let output = `  /**
+    const output = `  /**
    * Clear all data for ${controller}
    */
   async clearAllData(): Promise<void> {

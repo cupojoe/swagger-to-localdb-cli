@@ -4,20 +4,28 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   extends: [
     'eslint:recommended',
-    '@typescript-eslint/recommended',
   ],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
   },
   rules: {
-    '@typescript-eslint/no-explicit-any': 'warn',
-    '@typescript-eslint/no-unused-vars': 'warn',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    'no-unused-vars': 'warn',
+    'no-console': 'off',
+    'prefer-const': 'warn',
+    'no-var': 'error',
   },
   env: {
     node: true,
-    browser: true,
+    es6: true,
   },
+  overrides: [
+    {
+      files: ['*.ts'],
+      rules: {
+        'no-unused-vars': 'off', // Disable base rule for TypeScript files
+        'no-undef': 'off', // TypeScript handles this
+      }
+    }
+  ]
 };

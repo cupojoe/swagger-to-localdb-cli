@@ -1,0 +1,71 @@
+# Source files
+src/
+tsconfig.json
+.eslintrc.js
+.prettierrc
+
+# Development files
+.vscode/
+.idea/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test files
+test/
+tests/
+__tests__/
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+coverage/
+.nyc_output/
+
+# Build artifacts not needed in published package
+.tsbuildinfo
+*.tsbuildinfo
+
+# Documentation that's not essential
+docs/
+PROJECT_PLAN.md
+
+# Example outputs
+test-output/
+
+# Development dependencies
+node_modules/
+
+# Git files
+.git/
+.gitignore
+
+# Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+
+# Package manager files
+package-lock.json
+yarn.lock
+
+# Environment files
+.env
+.env.local
+.env.test
+.env.production
+
+# Keep these files for publication:
+# README.md
+# LICENSE
+# CHANGELOG.md
+# package.json
+# dist/
+# examples/

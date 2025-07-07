@@ -12,7 +12,11 @@
     "test": "jest",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write src/**/*.ts",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint && npm run build",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
   },
   "keywords": [
     "swagger",
@@ -22,10 +26,29 @@
     "mock",
     "api",
     "cli",
-    "code-generation"
+    "code-generation",
+    "frontend",
+    "development",
+    "mock-server",
+    "local-development",
+    "react",
+    "vue",
+    "angular"
   ],
-  "author": "Joel Fraga",
+  "author": {
+    "name": "Joel Fraga",
+    "email": "3393221+cupojoe@users.noreply.github.com",
+    "url": "https://github.com/cupojoe"
+  },
   "license": "MIT",
+  "homepage": "https://github.com/cupojoe/swagger-to-localdb-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cupojoe/swagger-to-localdb-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cupojoe/swagger-to-localdb-cli/issues"
+  },
   "dependencies": {
     "commander": "^11.1.0",
     "swagger-parser": "^10.0.3",
@@ -53,6 +76,6 @@
     "templates"
   ],
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=22.0.0"
   }
 }
