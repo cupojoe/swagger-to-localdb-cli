@@ -53,10 +53,11 @@ export class ${controllerName}Api {
   }
 
   /**
-   * Initialize the database
+   * Initialize the database and seed data if available
    */
   async init(): Promise<void> {
     await this.db.init();
+    await this.db.seedData();
   }
 
 `;

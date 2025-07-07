@@ -19,6 +19,7 @@ program
   .option('-d, --db-name <name>', 'IndexedDB database name', 'mockApiDB')
   .option('--delay <ms>', 'Response delay simulation in milliseconds', '200')
   .option('--config <path>', 'Path to configuration file')
+  .option('--seed <path>', 'Path to JSON file with seed data for initial database population')
   .option('--verbose', 'Enable verbose logging', false)
   .option('--no-validation', 'Disable schema validation in generated code', false)
   .action(generateCommand);

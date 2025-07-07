@@ -3,6 +3,7 @@ export interface GenerateOptions {
   dbName?: string;
   delay?: string;
   config?: string;
+  seed?: string;
   verbose?: boolean;
   validation?: boolean;
 }

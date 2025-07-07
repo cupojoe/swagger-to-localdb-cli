@@ -22,8 +22,16 @@ export async function generateCommand(
     // Load configuration
     const config = await loadConfig(options);
     
+    // Load seed data if provided
+    const seedData = await loadSeedData(options);
+    
     if (options.verbose) {
       console.log(chalk.blue('Configuration:'), JSON.stringify(config, null, 2));
+      if (seedData) {
+        console.log(chalk.blue('Seed data loaded:'), Object.keys(seedData).map(key =>
+          `${key}: ${Array.isArray(seedData[key]) ? seedData[key].length : 'N/A'} items`
+        ));
+      }
     }
 
     // Parse Swagger specification
@@ -39,7 +47,7 @@ export async function generateCommand(
     // Generate code
     spinner.text = 'Generating TypeScript files...';
     const generator = new CodeGenerator(config);
-    await generator.generate(parsedSpec, options.output);
+    await generator.generate(parsedSpec, options.output, seedData);
 
     spinner.succeed(chalk.green('Successfully generated TypeScript API files!'));
     
@@ -91,4 +99,41 @@ async function loadConfig(options: GenerateOptions): Promise<Config> {
   }
 
   return defaultConfig;
+}
+
+async function loadSeedData(options: GenerateOptions): Promise<Record<string, any[]> | null> {
+  if (!options.seed) {
+    return null;
+  }
+
+  try {
+    const seedPath = path.resolve(options.seed);
+    
+    if (!await fs.pathExists(seedPath)) {
+      console.warn(chalk.yellow(`Warning: Seed file not found: ${options.seed}`));
+      return null;
+    }
+
+    const seedContent = await fs.readJson(seedPath);
+    
+    // Validate that seed data is an object with arrays
+    if (typeof seedContent !== 'object' || seedContent === null) {
+      throw new Error('Seed data must be a JSON object');
+    }
+
+    // Ensure all values are arrays
+    const validatedSeedData: Record<string, any[]> = {};
+    for (const [key, value] of Object.entries(seedContent)) {
+      if (Array.isArray(value)) {
+        validatedSeedData[key] = value;
+      } else {
+        console.warn(chalk.yellow(`Warning: Seed data for '${key}' is not an array, skipping`));
+      }
+    }
+
+    return validatedSeedData;
+  } catch (error) {
+    console.warn(chalk.yellow(`Warning: Could not load seed file ${options.seed}: ${(error as Error).message}`));
+    return null;
+  }
 }

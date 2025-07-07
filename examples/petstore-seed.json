@@ -1,0 +1,39 @@
+{
+  "pets": [
+    {
+      "name": "Buddy",
+      "category": "dog",
+      "status": "available",
+      "tags": ["friendly", "energetic"],
+      "photoUrls": ["https://example.com/buddy.jpg"]
+    },
+    {
+      "name": "Whiskers",
+      "category": "cat",
+      "status": "available",
+      "tags": ["calm", "independent"],
+      "photoUrls": ["https://example.com/whiskers.jpg"]
+    },
+    {
+      "name": "Charlie",
+      "category": "dog",
+      "status": "pending",
+      "tags": ["playful", "loyal"],
+      "photoUrls": ["https://example.com/charlie.jpg"]
+    },
+    {
+      "name": "Luna",
+      "category": "cat",
+      "status": "sold",
+      "tags": ["quiet", "affectionate"],
+      "photoUrls": ["https://example.com/luna.jpg"]
+    },
+    {
+      "name": "Max",
+      "category": "dog",
+      "status": "available",
+      "tags": ["active", "smart"],
+      "photoUrls": ["https://example.com/max.jpg"]
+    }
+  ]
+}

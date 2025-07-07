@@ -1,6 +1,6 @@
 {
   "name": "swagger-to-localdb-cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CLI tool that generates TypeScript API files with IndexedDB mock implementations from Swagger/OpenAPI specifications",
   "main": "dist/index.js",
   "bin": {

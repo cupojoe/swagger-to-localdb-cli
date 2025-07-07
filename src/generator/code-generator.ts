@@ -17,7 +17,7 @@ export class CodeGenerator {
     this.dbGenerator = new DbGenerator(config);
   }
 
-  async generate(parsedSwagger: ParsedSwagger, outputDir: string): Promise<void> {
+  async generate(parsedSwagger: ParsedSwagger, outputDir: string, seedData?: Record<string, any[]> | null): Promise<void> {
     // Ensure output directory exists
     await fs.ensureDir(outputDir);
     
@@ -39,7 +39,7 @@ export class CodeGenerator {
     await this.apiGenerator.generate(parsedSwagger, apiDir);
 
     // Generate database layer
-    await this.dbGenerator.generate(parsedSwagger, dbDir);
+    await this.dbGenerator.generate(parsedSwagger, dbDir, seedData);
 
     // Generate configuration files
     await this.generateConfig(parsedSwagger, configDir);

@@ -5,7 +5,7 @@ import { ParsedSwagger, SwaggerEndpoint, Config } from '../types/cli-types';
 export class DbGenerator {
   constructor(private config: Config) {}
 
-  async generate(parsedSwagger: ParsedSwagger, outputDir: string): Promise<void> {
+  async generate(parsedSwagger: ParsedSwagger, outputDir: string, seedData?: Record<string, any[]> | null): Promise<void> {
     // Generate database setup file
     const dbSetupContent = this.generateDbSetup(parsedSwagger);
     await fs.writeFile(path.join(outputDir, 'db-setup.ts'), dbSetupContent);
@@ -14,7 +14,8 @@ export class DbGenerator {
     const controllerGroups = this.groupEndpointsByController(parsedSwagger.endpoints);
     
     for (const [controller, endpoints] of Object.entries(controllerGroups)) {
-      const dbContent = this.generateDbFile(controller, endpoints, parsedSwagger);
+      const controllerSeedData = seedData?.[controller] || null;
+      const dbContent = this.generateDbFile(controller, endpoints, parsedSwagger, controllerSeedData);
       await fs.writeFile(
         path.join(outputDir, `${controller}-db.ts`),
         dbContent
@@ -205,7 +206,7 @@ export function paginateRecords<T extends DbRecord>(
 `;
   }
 
-  private generateDbFile(controller: string, endpoints: SwaggerEndpoint[], parsedSwagger: ParsedSwagger): string {
+  private generateDbFile(controller: string, endpoints: SwaggerEndpoint[], parsedSwagger: ParsedSwagger, seedData?: any[] | null): string {
     const controllerName = this.toPascalCase(controller);
     
     return `// Generated Database operations for ${controllerName}
@@ -442,6 +443,34 @@ export class ${controller}Database {
         reject(new Error(\`Failed to clear ${controller} records for import: \${clearRequest.error}\`));
       };
     });
+  }
+
+  /**
+   * Seed the database with initial data
+   */
+  async seedData(): Promise<void> {
+    ${seedData && seedData.length > 0 ? `
+    const seedRecords = ${JSON.stringify(seedData, null, 4)};
+    
+    await this.init();
+    
+    // Check if data already exists
+    const existingRecords = await this.findAll();
+    if (existingRecords.length > 0) {
+      console.log(\`${controllerName} database already contains data, skipping seed\`);
+      return;
+    }
+    
+    // Convert seed data to database records
+    const dbRecords = seedRecords.map(item => createDbRecord(item));
+    
+    // Import the seed data
+    await this.importAll(dbRecords);
+    
+    console.log(\`Seeded ${controllerName} database with \${dbRecords.length} records\`);
+    ` : `
+    console.log(\`No seed data provided for ${controllerName}\`);
+    `}
   }
 }
 `;

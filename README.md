@@ -39,6 +39,9 @@ swagger-to-localdb generate ./swagger.json --output ./api --db-name "myAppDB"
 # Generate with custom response delay
 swagger-to-localdb generate ./swagger.json --output ./api --delay 500
 
+# Generate with seed data for initial database population
+swagger-to-localdb generate ./swagger.json --output ./api --seed ./seed-data.json
+
 # Verbose output
 swagger-to-localdb generate ./swagger.json --output ./api --verbose
 ```
@@ -50,6 +53,7 @@ swagger-to-localdb generate ./swagger.json --output ./api --verbose
 - `-d, --db-name <name>` - IndexedDB database name (default: `mockApiDB`)
 - `--delay <ms>` - Response delay simulation in milliseconds (default: `200`)
 - `--config <path>` - Path to configuration file
+- `--seed <path>` - Path to JSON file with seed data for initial database population
 - `--verbose` - Enable verbose logging
 - `--no-validation` - Disable schema validation in generated code
 
@@ -173,6 +177,51 @@ const PetStore: React.FC = () => {
 
 export default PetStore;
 ```
+
+## Seed Data
+
+The CLI tool supports seeding the generated IndexedDB with initial data using a JSON file. This is perfect for having sample data available immediately when developing your frontend.
+
+### Seed Data Format
+
+The seed data file should be a JSON object where keys match the controller/tag names from your Swagger specification, and values are arrays of objects:
+
+```json
+{
+  "pets": [
+    {
+      "name": "Buddy",
+      "category": "dog",
+      "status": "available",
+      "tags": ["friendly", "energetic"],
+      "photoUrls": ["https://example.com/buddy.jpg"]
+    },
+    {
+      "name": "Whiskers",
+      "category": "cat",
+      "status": "available",
+      "tags": ["calm", "independent"],
+      "photoUrls": ["https://example.com/whiskers.jpg"]
+    }
+  ]
+}
+```
+
+### Using Seed Data
+
+```bash
+# Generate API with seed data
+swagger-to-localdb generate ./swagger.json --seed ./seed-data.json --output ./api
+```
+
+### How Seeding Works
+
+1. **Automatic Population**: When the generated API is first initialized, it checks if the database is empty
+2. **One-time Seeding**: If empty, it populates the database with the seed data
+3. **Skip if Exists**: If data already exists, seeding is skipped to preserve existing data
+4. **Proper IDs**: Seed data is automatically assigned proper database IDs and timestamps
+
+The seed data is embedded directly into the generated database files, so no external dependencies are needed at runtime.
 
 ## HTTP Method Mapping
 
