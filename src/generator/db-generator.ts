@@ -319,6 +319,13 @@ export class ${controller}Database {
     
     // First, fetch the existing record
     const existingRecord = await this.findById(id);
+    
+    if (!existingRecord) {
+      const error = new Error(\`${controllerName} with id '\${id}' not found\`);
+      (error as any).status = 404;
+      return Promise.reject(error);
+    }
+    
     const updatedRecord = updateDbRecord(existingRecord, updates);
     
     return new Promise((resolve, reject) => {

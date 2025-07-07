@@ -432,5 +432,21 @@ describe('DbGenerator', () => {
       expect(setupContent).toContain("store.createIndex('createdAt', 'createdAt', { unique: false });");
       expect(setupContent).toContain("store.createIndex('updatedAt', 'updatedAt', { unique: false });");
     });
+
+    it('should handle update method with explicit null check', async () => {
+      const mockParsedSwagger = createMockSwaggerSpec();
+
+      await generator.generate(mockParsedSwagger, '/test/output');
+
+      const writeFileCall = (fs.writeFile as any).mock.calls.find((call: any[]) =>
+        call[0].includes('users-db.ts')
+      );
+      const dbContent = writeFileCall[1];
+
+      expect(dbContent).toContain('if (!existingRecord) {');
+      expect(dbContent).toContain('const error = new Error(`Users with id \'${id}\' not found`);');
+      expect(dbContent).toContain('(error as any).status = 404;');
+      expect(dbContent).toContain('return Promise.reject(error);');
+    });
   });
 });
