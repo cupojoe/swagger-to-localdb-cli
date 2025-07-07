@@ -386,6 +386,7 @@ describe('ApiGenerator', () => {
       const generatedContent = writeFileCall[1];
 
       expect(generatedContent).toContain('const usersApi = new UsersApi();');
+      expect(generatedContent).toContain('usersApi.init().catch(console.error);');
       expect(generatedContent).toContain('export { usersApi };');
       expect(generatedContent).toContain('export default usersApi;');
     });

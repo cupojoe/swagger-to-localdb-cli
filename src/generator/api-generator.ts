@@ -74,8 +74,9 @@ export class ${controllerName}Api {
     output += '}\n\n';
 
     // Generate instance and export functions
-    output += `// Create singleton instance
+    output += `// Create singleton instance and initialize
 const ${controller}Api = new ${controllerName}Api();
+${controller}Api.init().catch(console.error);
 
 // Export convenience functions
 `;
