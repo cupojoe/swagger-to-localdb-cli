@@ -145,7 +145,11 @@ const ${controller}Api = new ${controllerName}Api();
       // Log request if enabled
       if (defaultConfig.enableLogging) {
         console.log(\`[${endpoint.method}] ${endpoint.path}\`, {
-          ${pathParams.map(p => `${p.name}`).join(', ')}${queryParams.length > 0 ? ', params' : ''}${hasRequestBody ? ', body' : ''}
+          ${[
+            ...pathParams.map(p => p.name),
+            ...(queryParams.length > 0 ? ['params'] : []),
+            ...(hasRequestBody ? ['body'] : [])
+          ].join(', ')}
         });
       }
 
